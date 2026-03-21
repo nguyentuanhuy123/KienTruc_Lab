@@ -1,0 +1,45 @@
+# Dependency directories (Thư mục thư viện - KHÔNG ĐƯA LÊN GIT)
+node_modules/
+jspm_packages/
+env/
+venv/
+.env
+bin/
+pkg/
+obj/
+
+# Build outputs (Các file sau khi build)
+dist/
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+server
+
+# Docker files (Nếu bạn không muốn đưa các file tạm của Docker)
+.dockerignore
+# Docker-compose đôi khi sinh ra các file log
+*.log
+docker-compose.override.yml
+
+# IDE / Editor (Các file cấu hình của VS Code, JetBrains)
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database (Dữ liệu database local)
+postgres_data/
+redis_data/
+*.sqlite
