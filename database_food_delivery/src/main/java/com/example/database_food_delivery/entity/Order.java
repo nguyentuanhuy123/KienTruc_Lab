@@ -12,7 +12,11 @@ public class Order {
     private LocalDateTime orderDate;
     private BigDecimal total;
 
-    public Order(int id, int userId, LocalDateTime orderDate, BigDecimal total) {
+    public Order(Integer id, Integer userId, LocalDateTime orderDate, BigDecimal total) {
+        this.id = id;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.total = total;
     }
 
     public Order() {

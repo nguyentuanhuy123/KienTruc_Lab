@@ -13,6 +13,13 @@ public class User {
     private String phone;
 
     public User(int id, String name, String email, int age, String gender, String address, String phone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
     }
     public User(){
 
