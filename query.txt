@@ -1,0 +1,85 @@
+-- ================= Horizontal Partition: user nam / nữ =================
+CREATE TABLE user_male (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    age INT
+);
+
+CREATE TABLE user_female (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    age INT
+);
+
+-- ================= Vertical Partition: chi tiết user =================
+CREATE TABLE user_detail (
+    user_id INT PRIMARY KEY,
+    gender VARCHAR(10),
+    address VARCHAR(255),
+    phone VARCHAR(20)
+);
+
+-- ================= Functional Partition: Order / Payment / Shipping =================
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    order_date DATETIME,
+    total DECIMAL(10,2)
+);
+
+CREATE TABLE payments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    payment_date DATETIME,
+    amount DECIMAL(10,2),
+    method VARCHAR(50)
+);
+
+CREATE TABLE shipments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    shipping_date DATETIME,
+    status VARCHAR(50)
+);
+
+-- ================= User Horizontal Partition =================
+-- Nam
+INSERT INTO user_male (name, email, age) VALUES
+('Nguyen Van A', 'a.nv@gmail.com', 25),
+('Tran Van B', 'b.tv@gmail.com', 30);
+
+-- Nữ
+INSERT INTO user_female (name, email, age) VALUES
+('Le Thi C', 'c.lt@gmail.com', 22),
+('Pham Thi D', 'd.pt@gmail.com', 28);
+
+-- ================= User Vertical Partition =================
+INSERT INTO user_detail (user_id, gender, address, phone) VALUES
+(1, 'male', '123 Nguyen Trai, Hanoi', '0987654321'),
+(2, 'male', '456 Le Loi, HCMC', '0912345678'),
+(3, 'female', '789 Tran Hung Dao, HCMC', '0978123456'),
+(4, 'female', '321 Ly Thuong Kiet, Hanoi', '0909876543');
+
+-- ================= Functional Partition =================
+-- Orders
+INSERT INTO orders (user_id, order_date, total) VALUES
+(1, NOW(), 250.00),
+(2, NOW(), 320.50),
+(3, NOW(), 150.75),
+(4, NOW(), 400.00);
+
+-- Payments
+INSERT INTO payments (order_id, payment_date, amount, method) VALUES
+(1, NOW(), 250.00, 'Credit Card'),
+(2, NOW(), 320.50, 'Cash'),
+(3, NOW(), 150.75, 'Momo'),
+(4, NOW(), 400.00, 'Credit Card');
+
+-- Shipments
+INSERT INTO shipments (order_id, shipping_date, status) VALUES
+(1, NOW(), 'Shipped'),
+(2, NOW(), 'Pending'),
+(3, NOW(), 'Delivered'),
+(4, NOW(), 'Shipped');

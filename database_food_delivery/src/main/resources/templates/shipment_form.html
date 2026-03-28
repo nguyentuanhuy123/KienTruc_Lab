@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shipment Form</title>
+</head>
+<body>
+<form th:action="@{/shipments/save}" th:object="${shipment}" method="post">
+    <input type="number" th:field="*{orderId}" placeholder="Order ID"/>
+    <input type="datetime-local" th:field="*{shippingDate}" placeholder="Shipping Date"/>
+    <input type="text" th:field="*{status}" placeholder="Status"/>
+    <button type="submit">Add Shipment</button>
+</form>
+</body>
+</html>

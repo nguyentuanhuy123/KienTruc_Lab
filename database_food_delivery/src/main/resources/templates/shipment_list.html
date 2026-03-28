@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shipment List</title>
+</head>
+<body>
+<h2>Shipment List</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Shipping Date</th>
+        <th>Status</th>
+    </tr>
+    <tr th:each="shipment : ${shipments}">
+        <td th:text="${shipment.id}"></td>
+        <td th:text="${shipment.orderId}"></td>
+        <td th:text="${shipment.shippingDate}"></td>
+        <td th:text="${shipment.status}"></td>
+    </tr>
+</table>
+<a th:href="@{/shipments/new}">Add New Shipment</a>
+</body>
+</html>
