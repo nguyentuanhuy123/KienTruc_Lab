@@ -1,0 +1,31 @@
+### --- VS Code --- ###
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+### --- IntelliJ IDEA --- ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+gen/
+# Nếu bạn dùng Java/Maven/Gradle trong IntelliJ
+.gradle/
+build/
+target/
+
+### --- Hệ điều hành (OS) --- ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### --- Các file log và tạm thời --- ###
+*.log
+logs/
+*.tmp
+*.temp
