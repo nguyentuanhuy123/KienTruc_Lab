@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - movienet
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: moviedb
+      MYSQL_USER: movieuser
+      MYSQL_PASSWORD: moviepass
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - movienet
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "9001:9001"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: movieuser
+      SPRING_DATASOURCE_PASSWORD: moviepass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      JWT_SECRET: mySecretKey12345678901234567890AB
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - movienet
+
+  movie-service:
+    build: ./movie-service
+    container_name: movie-service
+    ports:
+      - "9002:9002"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/moviedb?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: movieuser
+      SPRING_DATASOURCE_PASSWORD: moviepass
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - movienet
+
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    ports:
+      - "9003:9003"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookingdb?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: movieuser
+      SPRING_DATASOURCE_PASSWORD: moviepass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      JWT_SECRET: mySecretKey12345678901234567890AB
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - movienet
+
+  payment-notification-service:
+    build: ./payment-notification-service
+    container_name: payment-notification-service
+    ports:
+      - "9004:9004"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/paymentdb?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: movieuser
+      SPRING_DATASOURCE_PASSWORD: moviepass
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - movienet
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "9000:9000"
+    environment:
+      USER_SERVICE_URL: http://user-service:9001
+      MOVIE_SERVICE_URL: http://movie-service:9002
+      BOOKING_SERVICE_URL: http://booking-service:9003
+    depends_on:
+      - user-service
+      - movie-service
+      - booking-service
+    networks:
+      - movienet
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8085:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - movienet
+
+volumes:
+  mysqldata:
+
+networks:
+  movienet:
+    driver: bridge

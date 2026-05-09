@@ -1,0 +1,29 @@
+server:
+  port: 9004
+
+spring:
+  application:
+    name: payment-notification-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/paymentdb?useSSL=false&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:paymentuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:paymentpass}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  # Chuyển từ Kafka sang RabbitMQ tại đây
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: 5672
+    username: guest
+    password: guest
+
+logging:
+  level:
+    com.movieticket: DEBUG
