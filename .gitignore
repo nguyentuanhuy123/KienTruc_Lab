@@ -1,0 +1,17 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+gen/
+
+### Build Tools (Nếu bạn dùng Maven hoặc Gradle) ###
+target/
+.gradle/
+build/
+
+### Log và file tạm ###
+*.log
+.DS_Store
+Thumbs.db
